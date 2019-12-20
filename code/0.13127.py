@@ -344,27 +344,27 @@ if auto_grid:
     print('row366--开始对5个选定的模型进行自动调参（Bayesian Ridge无需调参）')
     print('\t\t1.Ridge-------------------')
     grid(Ridge()).grid_get(X_scaled, Y_log,
-                           {'alpha': [35, 40, 45, 50, 55, 60, 65, 70, 80, 90]})
+                           {'alpha': [35, 40, 45, 50, 55, 60, 65, 70, 80, 90], 'solver': ['auto', 'svd', 'cholesky', 'lsqr', 'sparse_cg', 'sag']})
     print('\t\t2.LASSO-------------------')
     grid(Lasso()).grid_get(X_scaled, Y_log,
-                           {'alpha': [0.0004, 0.0005, 0.0007, 0.0009], 'max_iter': [10000]})
+                           {'alpha': [0.0001, 0.0002, 0.0003, 0.0004, 0.0005, 0.0007, 0.0009], 'max_iter': [10000,15000]})
     print('\t\t3.SVR-------------------')
     grid(SVR()).grid_get(X_scaled, Y_log,
-                         {'C': [11, 13, 15], 'kernel': ["rbf"], "gamma": [0.0003, 0.0004], "epsilon": [0.008, 0.009]})
+                         {'C': [11, 13, 15, 12], 'kernel': ["rbf", "poly", "sigmoid"], "gamma": [0.0003, 0.0004, 0.00045, 0.0005], "epsilon": [0.007, 0.008, 0.009]})
     print('\t\t4.Elastic Net-------------------')
     grid(ElasticNet()).grid_get(X_scaled, Y_log,
-                                {'alpha': [0.0008, 0.004, 0.005], 'l1_ratio': [0.08, 0.1, 0.3], 'max_iter': [10000]})
+                                {'alpha': [0.0008, 0.004, 0.005, 0.002, 0.003, 0.006], 'l1_ratio': [0.08, 0.1, 0.3, 0.2, 0.4, 0.5, 0.6, 0.25], 'max_iter': [10000, 15000]})
     print('\t\t5.Kernel Ridge-------------------')
     grid(KernelRidge()).grid_get(X_scaled, Y_log,
-                                 {'alpha': [0.2, 0.3, 0.4], 'kernel': ["polynomial"], 'degree': [3], 'coef0': [0.8, 1]})
+                                 {'alpha': [0.2, 0.3, 0.4, 0.1, 0.5, 0.6, 0.7], 'kernel': ["polynomial"], 'degree': [3, 4, 5, 6], 'coef0': [0.8, 1, 0.6, 1.1]})
 
 # 以下是调好参数的模型
-model_ridge = Ridge(alpha=35)
+model_ridge = Ridge(alpha=35, solver='svd')
 model_lasso = Lasso(alpha=0.0009, max_iter=10000)
-model_svr = SVR(gamma=0.0004, kernel='rbf', C=11, epsilon=0.008)
-model_elasticnet = ElasticNet(alpha=0.005, l1_ratio=0.3, max_iter=10000)
+model_svr = SVR(gamma=0.0005, kernel='rbf', C=11, epsilon=0.007)
+model_elasticnet = ElasticNet(alpha=0.005, l1_ratio=0.6, max_iter=10000)
 model_bayesianridge = BayesianRidge()
-model_kernelridge = KernelRidge(alpha=0.3, kernel='polynomial', degree=3, coef0=1)
+model_kernelridge = KernelRidge(alpha=0.5, kernel='polynomial', degree=3, coef0=1.1)
 
 """STEP7:集成多个模型-------------------------------------------------------------------------------------"""
 
